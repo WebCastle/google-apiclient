@@ -42,7 +42,7 @@ class GoogleServiceProvider extends ServiceProvider
 
             $this->publishes([
                 $location => config_path($this->shortName . '.php'),
-            ]);
+            ], 'config');
         } else if ($laravel_version == 4) {
             $this->package('pulkitjalan/google-apiclient', realpath(__DIR__ . '/../config'), 'google');
         }
