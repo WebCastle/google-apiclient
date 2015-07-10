@@ -30,7 +30,18 @@ class GoogleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->config->package('pulkitjalan/google-apiclient', realpath(__DIR__.'/config'), 'google');
+        $app             = $this->app ?: app();
+        $laravel_version = substr($app::VERSION, 0, strpos($app::VERSION, '.'));
+
+        if ($laravel_version == 5) {
+            $this->mergeConfigFrom(__DIR__ . '/config/config.php', 'google');
+
+            $this->publishes([
+                __DIR__ . '/config/config.php' => config_path('google.php'),
+            ]);
+        } else if ($laravel_version == 4) {
+            $this->package('pulkitjalan/google-apiclient', realpath(__DIR__ . '/config'), 'google');
+        }
 
         $this->app['google.api.client'] = $this->app->share(function () {
             return new Client($this->app->config->get('google::config'));
