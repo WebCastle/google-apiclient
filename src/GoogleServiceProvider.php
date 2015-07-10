@@ -13,6 +13,8 @@ class GoogleServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
+    protected $shortName = 'googleclient';
+
     /**
      * Boot the service provider.
      */
@@ -34,13 +36,15 @@ class GoogleServiceProvider extends ServiceProvider
         $laravel_version = substr($app::VERSION, 0, strpos($app::VERSION, '.'));
 
         if ($laravel_version == 5) {
-            $this->mergeConfigFrom(__DIR__ . '/config/config.php', 'google');
+            $location = __DIR__ . '/../config/config.php';
+
+            $this->mergeConfigFrom($location, $this->shortName);
 
             $this->publishes([
-                __DIR__ . '/config/config.php' => config_path('google.php'),
+                $location => config_path($this->shortName . '.php'),
             ]);
         } else if ($laravel_version == 4) {
-            $this->package('pulkitjalan/google-apiclient', realpath(__DIR__ . '/config'), 'google');
+            $this->package('pulkitjalan/google-apiclient', realpath(__DIR__ . '/../config'), 'google');
         }
 
         $this->app['google.api.client'] = $this->app->share(function () {
